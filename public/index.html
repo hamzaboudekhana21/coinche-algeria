@@ -9,7 +9,8 @@
 <section id="bidding" class="panel"><b>المزايدة</b><div class="row" style="margin-top:8px"><input id="amount" type="number" min="80" step="10" value="80"><select id="suit"><option>♠</option><option>♥</option><option>♦</option><option>♣</option></select><button onclick="bid()">مزايدة</button><button onclick="pass()">Pass</button><button onclick="coinche()">Coinche</button><button onclick="surcoinche()">Surcoinche</button></div><div class="hint" id="bidInfo"></div></section>
 <section class="panel"><button class="primary" onclick="newMatch()">مباراة جديدة</button></section></div>
 <aside><section class="panel"><b>الدردشة</b><div id="chat" class="chat"></div><div class="row" style="margin-top:8px"><input id="msg" placeholder="اكتب رسالة" maxlength="300"><button onclick="sendChat()">إرسال</button></div></section><section class="panel"><b>قواعد الجولة</b><div class="hint">32 ورقة • 8 plis • أقل مزايدة 80 • الهدف 3000<br>الخادم هو الذي يتحقق من كل حركة.</div></section></aside></section>
-</main><script src="/socket.io/socket.io.js"></script><script>
+</main><script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="/socket.io/socket.io.js"></script><script>
 const socket=io();let mySeat=-1,lastState=null,myHand=[];const $=id=>document.getElementById(id);const suits=['♥','♦'];
 function msg(x){$('status').textContent=x}function join(){socket.emit('join',{name:$('name').value,code:$('code').value})}function start(){socket.emit('start')}function bid(){socket.emit('bid',{amount:Number($('amount').value),trump:$('suit').value})}function pass(){socket.emit('pass')}function coinche(){socket.emit('coinche')}function surcoinche(){socket.emit('surcoinche')}function newMatch(){socket.emit('newMatch')}function sendChat(){const x=$('msg');if(x.value.trim())socket.emit('chat',x.value.trim());x.value=''}
 function cardText(c){return c.r+c.s}function cardClass(c){return (c.s==='♥'||c.s==='♦')?'red':''}
