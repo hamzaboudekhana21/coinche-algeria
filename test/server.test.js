@@ -1,0 +1,1 @@
+const test=require('node:test');test('project has multiplayer core files',()=>{const fs=require('fs');if(!fs.existsSync('server/index.js')||!fs.existsSync('public/index.html'))throw Error('missing core files')});

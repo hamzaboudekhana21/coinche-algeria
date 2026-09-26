@@ -1,0 +1,6 @@
+const test=require('node:test');const assert=require('node:assert/strict');const g=require('../server/game');
+test('deck has 32 unique cards',()=>{const d=g.makeDeck();assert.equal(d.length,32);assert.equal(new Set(d.map(c=>c.id)).size,32)});
+test('dealing gives four hands of eight',()=>{const x=g.createGame();g.deal(x);assert.equal(x.phase,'bidding');assert.deepEqual(x.hands.map(h=>h.length),[8,8,8,8])});
+test('bidding raises and then passes into play',()=>{const x=g.createGame();g.deal(x);assert.equal(g.placeBid(x,0,80,'♠').ok,true);assert.equal(g.placeBid(x,1,90,'♥').ok,true);assert.equal(g.passBid(x,2).ok,true);assert.equal(g.passBid(x,3).ok,true);assert.equal(g.passBid(x,0).ok,true);assert.equal(x.phase,'play');assert.equal(x.trump,'♥')});
+test('legal play rejects off-suit when player has lead suit',()=>{const x=g.createGame();x.phase='play';x.trump='♠';x.turn=0;x.hands[0]=[{id:'♥A',s:'♥',r:'A'},{id:'♣7',s:'♣',r:'7'}];x.trick=[{player:1,card:{id:'♥7',s:'♥',r:'7'}}];assert.equal(g.play(x,0,'♣7').ok,false);assert.equal(g.play(x,0,'♥A').ok,true)});
+test('score uses contract when contract succeeds',()=>{const x=g.createGame();x.phase='round_end';x.bid={amount:80,trump:'♠',seat:0};x.declarerTeam=0;x.multiplier=2;x.trickPoints=[90,62];const r=g.scoreRound(x);assert.equal(r.made,true);assert.equal(r.delta,180)});
